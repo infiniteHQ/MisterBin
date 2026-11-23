@@ -1,7 +1,7 @@
 {
     "type": "em",
     "group": "System Dev",
-    "name": "infinitehq.misterbin.core",
+    "name": "infinitehq.misterbin",
     "proper_name": "MisterBin Core",
     "auto_exec": true,
     "version": "1.0.0",

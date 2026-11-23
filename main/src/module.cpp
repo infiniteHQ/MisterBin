@@ -29,7 +29,7 @@ std::string MisterBin::get_path(const std::string &path) {
   return get_current_context()->m_interface->cook_path(path);
 }
 
-bool MisterBin::IsValidFile(const std::string &path) {
+bool MisterBin::is_binary_file(const std::string &path) {
   namespace fs = std::filesystem;
 
   if (!fs::is_directory(path)) {
@@ -46,7 +46,7 @@ bool MisterBin::IsValidFile(const std::string &path) {
   return false;
 }
 
-void MisterBin::StartTextEditorInstance(const std::string &path) {
+void MisterBin::open_binary_editor(const std::string &path) {
   std::string filename = fs::path(path).filename().string();
 
   const size_t maxLen = 24;

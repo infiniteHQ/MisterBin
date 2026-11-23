@@ -36,10 +36,7 @@ MISTERBIN_API std::string get_path(const std::string &path);
 MISTERBIN_API bool is_binary_file(const std::string &path);
 
 // Editors
-MISTERBIN_API void open_hexadecimal_editor(const std::string &path);
-
-MISTERBIN_API void StartTextEditorInstance(const std::string &path);
-MISTERBIN_API bool IsValidFile(const std::string &path);
+MISTERBIN_API void open_binary_editor(const std::string &path);
 } // namespace MisterBin
 
 #endif // MISTERBIN_HPP

@@ -11,32 +11,8 @@ public:
     MisterBin::get_current_context()->m_interface = m;
 
     this->add_content_browser_item_handler(ItemHandlerInterface(
-        "file_cpp", MisterBin::StartTextEditorInstance, "Edit",
-        "Edit this C++ file", MisterBin::get_path("resources/icons/edit.png")));
-    this->add_content_browser_item_handler(ItemHandlerInterface(
-        "file_lua", MisterBin::StartTextEditorInstance, "Edit",
-        "Edit this Lua file", MisterBin::get_path("resources/icons/edit.png")));
-    this->add_content_browser_item_handler(ItemHandlerInterface(
-        "file_json", MisterBin::StartTextEditorInstance, "Edit",
-        "Edit this JSON file", MisterBin::get_path("resources/icons/edit.png")));
-    this->add_content_browser_item_handler(
-        ItemHandlerInterface("file_hpp", MisterBin::StartTextEditorInstance,
-                             "Edit", "Edit this C++ header file",
-                             MisterBin::get_path("resources/icons/edit.png")));
-    this->add_content_browser_item_handler(ItemHandlerInterface(
-        "file_c", MisterBin::StartTextEditorInstance, "Edit", "Edit this C file",
-        MisterBin::get_path("resources/icons/edit.png")));
-    this->add_content_browser_item_handler(
-        ItemHandlerInterface("file_h", MisterBin::StartTextEditorInstance,
-                             "Edit", "Edit this C header file",
-                             MisterBin::get_path("resources/icons/edit.png")));
-    this->add_content_browser_item_handler(
-        ItemHandlerInterface("file_python", MisterBin::StartTextEditorInstance,
-                             "Edit", "Edit this Python file",
-                             MisterBin::get_path("resources/icons/edit.png")));
-
-    this->add_content_browser_item_identifier(ItemIdentifierInterface(
-        MisterBin::IsValidFile, "text_edit:superfile", "Super file", "#553333"));
+        "file_bin", MisterBin::open_binary_editor, "View",
+        "View this binary file", MisterBin::get_path("resources/icons/edit.png")));
 
     this->set_credits_file(MisterBin::get_path("CREDITS"));
     this->add_documentation("Take the editor", "Edit a txt file",
@@ -56,7 +32,7 @@ public:
     this->reset_module();
 
     // Clear windows
-    for (auto i : MisterBin::get_current_context()->m_text_editor_instances) {
+    for (auto i : MisterBin::get_current_context()->m_binary_editor_instances) {
       CherryApp.DeleteAppWindow(i->GetAppWindow());
     }
 

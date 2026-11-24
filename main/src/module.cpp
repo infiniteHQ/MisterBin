@@ -1,5 +1,11 @@
 #include "module.hpp"
 
+#include <algorithm>
+#include <filesystem>
+#include <fstream>
+
+namespace fs = std::filesystem;
+
 // runtime pointer
 #ifndef CMisterBin
 std::weak_ptr<MisterBin::Context> CMisterBin;
@@ -7,6 +13,7 @@ std::weak_ptr<MisterBin::Context> CMisterBin;
 
 std::shared_ptr<MisterBin::Context> MisterBin::create_context() {
   auto ctx = std::make_shared<MisterBin::Context>();
+  ctx->m_registry = DecoderRegistry::create_with_builtins();
 
   set_current_context(ctx);
 
@@ -30,20 +37,47 @@ std::string MisterBin::get_path(const std::string &path) {
 }
 
 bool MisterBin::is_binary_file(const std::string &path) {
-  namespace fs = std::filesystem;
-
-  if (!fs::is_directory(path)) {
+  std::error_code ec;
+  if (!fs::is_regular_file(path, ec)) {
     return false;
   }
 
-  for (const auto &entry : fs::directory_iterator(path)) {
-    if (entry.is_regular_file() &&
-        entry.path().filename() == "SampleConfig.txt") {
-      return true;
-    }
+  // Heuristic: a NUL byte in the first 8 KiB means binary.
+  std::ifstream in(path, std::ios::binary);
+  if (!in) {
+    return false;
   }
 
-  return false;
+  char buffer[8192];
+  in.read(buffer, sizeof(buffer));
+  const std::streamsize n = in.gcount();
+  return std::find(buffer, buffer + n, '\0') != buffer + n;
+}
+
+std::shared_ptr<MisterBin::DecoderRegistry> MisterBin::get_registry() {
+  auto ctx = get_current_context();
+  return ctx ? ctx->m_registry : nullptr;
+}
+
+void MisterBin::register_format_decoder(std::shared_ptr<IFormatDecoder> decoder) {
+  if (auto registry = get_registry()) {
+    registry->add_format_decoder(std::move(decoder));
+  }
+}
+
+void MisterBin::register_disassembler(std::shared_ptr<IDisassembler> disassembler) {
+  if (auto registry = get_registry()) {
+    registry->add_disassembler(std::move(disassembler));
+  }
+}
+
+std::shared_ptr<MisterBin::BinarySession>
+MisterBin::create_binary_session(const std::string &path) {
+  auto session = std::make_shared<BinarySession>(get_registry());
+  if (!session->open(path)) {
+    return nullptr;
+  }
+  return session;
 }
 
 void MisterBin::open_binary_editor(const std::string &path) {
@@ -57,9 +91,9 @@ void MisterBin::open_binary_editor(const std::string &path) {
   std::string window_name =
       filename + "####" +
       std::to_string(
-          MisterBin::get_current_context()->m_text_editor_instances.size());
+          MisterBin::get_current_context()->m_binary_editor_instances.size());
 
-  auto inst = ModuleUI::TextEditorAppWindow::Create(path, window_name);
+  auto inst = ModuleUI::BinaryEditorAppWindow::Create(path, window_name);
   Cherry::AddAppWindow(inst->GetAppWindow());
-  MisterBin::get_current_context()->m_text_editor_instances.push_back(inst);
+  MisterBin::get_current_context()->m_binary_editor_instances.push_back(inst);
 }

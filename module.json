@@ -1,8 +1,8 @@
 {
     "type": "em",
-    "group": "System Dev",
+    "group": "Editors",
     "name": "infinitehq.misterbin",
-    "proper_name": "MisterBin Core",
+    "proper_name": "MisterBin",
     "auto_exec": true,
     "version": "1.0.0",
     "author": "Infinite",

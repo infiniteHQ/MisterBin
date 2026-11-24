@@ -1,9 +1,10 @@
-
 #include <vxcore/include/vortex.h>
 #include <vxcore/include/vortex_internals.h>
 #include <vxgui/editor/main/editor.hpp>
 
-#include "../ui/instances/text_editor/text_editor.hpp"
+#include "core/binary_session.hpp"
+#include "core/decoders.hpp"
+#include "../ui/instances/binary_editor/binary_editor.hpp"
 
 #ifndef MISTERBIN_HPP
 #define MISTERBIN_HPP
@@ -11,8 +12,8 @@
 namespace MisterBin {
 struct Context {
   std::shared_ptr<ModuleInterface> m_interface;
-  std::vector<std::shared_ptr<ModuleUI::TextEditorAppWindow>>
-      m_text_editor_instances;
+  std::shared_ptr<DecoderRegistry> m_registry;
+  std::vector<std::shared_ptr<ModuleUI::BinaryEditorAppWindow>> m_binary_editor_instances;
 };
 } // namespace MisterBin
 
@@ -37,6 +38,13 @@ MISTERBIN_API bool is_binary_file(const std::string &path);
 
 // Editors
 MISTERBIN_API void open_binary_editor(const std::string &path);
+
+// Sessions and decoders
+MISTERBIN_API std::shared_ptr<BinarySession> create_binary_session(const std::string &path);
+MISTERBIN_API std::shared_ptr<DecoderRegistry> get_registry();
+MISTERBIN_API void register_format_decoder(std::shared_ptr<IFormatDecoder> decoder);
+MISTERBIN_API void register_disassembler(std::shared_ptr<IDisassembler> disassembler);
+
 } // namespace MisterBin
 
 #endif // MISTERBIN_HPP

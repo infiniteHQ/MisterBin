@@ -1,4 +1,0 @@
-/home/diegomoreno/Workspace/MisterBin/build/CMakeFiles/module.dir
-/home/diegomoreno/Workspace/MisterBin/build/CMakeFiles/sync_assets_editor.dir
-/home/diegomoreno/Workspace/MisterBin/build/CMakeFiles/edit_cache.dir
-/home/diegomoreno/Workspace/MisterBin/build/CMakeFiles/rebuild_cache.dir
